@@ -1,0 +1,35 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# AI tooling working dirs
+.antigravitycli/
+.aider*
+.cursor/
+.claude/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Defensive — in case this repo gets cloned into a project context
+node_modules/
+__pycache__/
+*.pyc
+dist/
+build/
