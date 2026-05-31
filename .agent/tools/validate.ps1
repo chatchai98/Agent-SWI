@@ -23,8 +23,8 @@ if (Test-Path .agent)   { Pass ".agent/" } else { Fail ".agent/ missing" }
 Write-Host "[2] Required .agent files"
 $required = @(
   '.agent\version.md', '.agent\task.md', '.agent\stack.md',
-  '.agent\conventions.md', '.agent\glossary.md', '.agent\memory\index.md', '.agent\skills\index.md',
-  '.agent\templates\memory_template.md', '.agent\templates\implementation_template.md',
+  '.agent\conventions.md', '.agent\glossary.md', '.agent\memory\index.md', '.agent\archive\index.md', '.agent\skills\index.md',
+  '.agent\templates\memory_template.md', '.agent\templates\archive_template.md', '.agent\templates\implementation_template.md',
   '.agent\templates\skill_template.md', '.agent\templates\adr_template.md'
 )
 foreach ($f in $required) {
@@ -57,9 +57,22 @@ function Test-IndexCoverage($dir, $indexPath, $label) {
 Test-IndexCoverage '.agent\skills' '.agent\skills\index.md' "[4] Skill index coverage"
 Test-IndexCoverage '.agent\memory' '.agent\memory\index.md' "[5] Memory index coverage"
 
-Write-Host "[6] Frontmatter present (memory, implementation, skills, decisions)"
-foreach ($d in 'memory', 'implementation', 'skills', 'decisions') {
-  Get-ChildItem ".agent\$d" -Filter *.md -File -ErrorAction SilentlyContinue |
+Write-Host "[5a] Archive index coverage"
+if (-not (Test-Path '.agent\archive\index.md')) { Fail ".agent\archive\index.md missing" }
+else {
+  $archiveIdx = Get-Content '.agent\archive\index.md' -Raw
+  $archiveRoot = (Resolve-Path '.agent\archive').Path
+  Get-ChildItem '.agent\archive' -Filter *.md -File -Recurse -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -ne 'index.md' } | ForEach-Object {
+      $rel = $_.FullName.Substring($archiveRoot.Length + 1) -replace '\\', '/'
+      if ($archiveIdx -match [regex]::Escape($rel)) { Pass "indexed: $rel" }
+      else { Fail "not in .agent\archive\index.md: $rel" }
+    }
+}
+
+Write-Host "[6] Frontmatter present (memory, archive, implementation, skills, decisions)"
+foreach ($d in 'memory', 'archive', 'implementation', 'skills', 'decisions') {
+  Get-ChildItem ".agent\$d" -Filter *.md -File -Recurse -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne 'index.md' } | ForEach-Object {
       $lines = Get-Content $_.FullName -TotalCount 2
       if (($lines.Count -ge 1 -and $lines[0] -eq '---') -or ($lines.Count -ge 2 -and $lines[1] -eq '---')) {
@@ -73,6 +86,12 @@ Get-ChildItem '.agent\memory' -Filter *.md -File -ErrorAction SilentlyContinue |
   Where-Object { $_.Name -ne 'index.md' } | ForEach-Object {
     if ($_.Name -match '^[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$') { Pass "memory name: $($_.Name)" }
     else { Fail "bad memory name (want yyyy-mm-dd.md): $($_.Name)" }
+  }
+Get-ChildItem '.agent\archive' -Filter *.md -File -Recurse -ErrorAction SilentlyContinue |
+  Where-Object { $_.Name -ne 'index.md' } | ForEach-Object {
+    $rel = $_.FullName.Substring((Resolve-Path '.agent\archive').Path.Length + 1) -replace '\\', '/'
+    if ($rel -match '^[0-9]{4}/q[1-4]\.md$') { Pass "archive name: $rel" }
+    else { Fail "bad archive name (want .agent/archive/yyyy/qN.md): $rel" }
   }
 Get-ChildItem '.agent\decisions' -Filter *.md -File -ErrorAction SilentlyContinue |
   Where-Object { $_.Name -ne 'index.md' } | ForEach-Object {

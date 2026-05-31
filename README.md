@@ -2,7 +2,7 @@
 
 > A drop-in "Second Brain" convention for AI coding agents. One folder, one contract, and every agent that touches your project can recover the same stack, conventions, decisions, memory, and implementation history.
 
-Current standard version: `0.2.0`
+Current standard version: `0.3.0`
 
 ---
 
@@ -30,6 +30,7 @@ Agent-SWI keeps that knowledge in plain Markdown inside the repo. It is not a li
 | Domain vocabulary | `.agent/glossary.md` |
 | Daily memory log | `.agent/memory/yyyy-mm-dd.md` |
 | Keyword-indexed memory | `.agent/memory/index.md` |
+| Searchable cold archive | `.agent/archive/index.md`, `.agent/archive/yyyy/qN.md` |
 | Reusable skill playbooks | `.agent/skills/*.md` |
 | Skill discovery index | `.agent/skills/index.md` |
 | Per-day implementation plans | `.agent/implementation/implementation_plan_dd-mm-yyyy.md` |
@@ -57,6 +58,10 @@ Agent-SWI keeps that knowledge in plain Markdown inside the repo. It is not a li
     ├── memory/
     │   ├── index.md
     │   └── yyyy-mm-dd.md
+    ├── archive/
+    │   ├── index.md
+    │   └── yyyy/
+    │       └── qN.md
     ├── skills/
     │   ├── index.md
     │   └── *.md
@@ -127,9 +132,9 @@ Use `.agent/checklists/structure_checklist.md` after copying or changing the sta
 
 ## 📐 Core Conventions
 
-1. **Read order:** `BRAIN.md` -> `.agent/task.md` -> `.agent/stack.md` -> `.agent/conventions.md` -> `.agent/glossary.md` -> `.agent/memory/index.md` -> `.agent/skills/index.md` -> relevant implementation plans and ADRs.
+1. **Read order:** `BRAIN.md` -> `.agent/task.md` -> `.agent/stack.md` -> `.agent/conventions.md` -> `.agent/glossary.md` -> `.agent/memory/index.md` -> `.agent/archive/index.md` only when older context is needed -> `.agent/skills/index.md` -> relevant implementation plans and ADRs.
 2. **Same-day artifacts append, never duplicate.** Memory and implementation files use `## Section N - <topic> [HH:MM]`.
-3. **Index all memory and skills.** A section or skill that is not indexed is effectively invisible.
+3. **Index all memory, archive entries, and skills.** A section or skill that is not indexed is effectively invisible.
 4. **Respect work mode.** In read-only or review work, report missing indexes or stale docs instead of editing them.
 5. **Every generated artifact has YAML frontmatter.**
 6. **Trust code over docs.** If they disagree, trust the code and update the docs when writes are allowed.
@@ -146,7 +151,8 @@ The checklist covers:
 - `.agent/version.md` exists and contains the standard semantic version.
 - Required `.agent` files exist.
 - `.agent/skills/*.md` files are listed in `.agent/skills/index.md`.
-- Artifact files under memory, implementation, skills, and decisions have YAML frontmatter.
+- Archive entries are listed in `.agent/archive/index.md`.
+- Artifact files under memory, archive, implementation, skills, and decisions have YAML frontmatter.
 - Implementation and ADR filenames match the standard patterns.
 - Memory and implementation templates use the canonical section heading format.
 
@@ -169,7 +175,7 @@ Agent-SWI uses semantic versioning for the standard itself:
 ## ❓ FAQ
 
 **Do I need every file?**  
-No. The minimum useful subset is `BRAIN.md`, `.agent/task.md`, `.agent/memory/`, and `.agent/memory/index.md`. The full set is recommended for teams and multi-agent workflows.
+No. The minimum useful subset is `BRAIN.md`, `.agent/task.md`, `.agent/memory/`, `.agent/memory/index.md`, and `.agent/archive/index.md`. The full set is recommended for teams and multi-agent workflows.
 
 **Why Markdown instead of a database?**  
 Markdown is portable, easy to diff, and already readable by AI agents and humans.

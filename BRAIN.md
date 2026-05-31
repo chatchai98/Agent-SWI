@@ -1,5 +1,5 @@
 ---
-agent_swi_version: 0.2.0
+agent_swi_version: 0.3.0
 type: contract
 status: active
 ---
@@ -34,13 +34,15 @@ Before doing substantive work, read in this order:
 4. `.agent/conventions.md`
 5. `.agent/glossary.md`
 6. `.agent/memory/index.md`, then only dated memory files relevant to the task
-7. `.agent/skills/index.md`, then only skill files relevant to the task
-8. Relevant `.agent/implementation/` plans and `.agent/decisions/` ADRs
+7. `.agent/archive/index.md`, only when current memory does not contain the needed older context
+8. `.agent/skills/index.md`, then only skill files relevant to the task
+9. Relevant `.agent/implementation/` plans and `.agent/decisions/` ADRs
 
 Token discipline:
 
 - Use `.agent/` as indexed long-term project memory, not as a transcript.
 - Read indexes first, then open only entries, skills, ADRs, and plans that match the current task.
+- Treat `.agent/archive/` as cold storage. Search its index first and open archive sections only when current memory is insufficient.
 - Do not scan the whole repository unless the task scope requires it.
 - Prefer targeted search (`rg`) and focused file reads over broad file dumps.
 - Stop reading once you have enough context to act safely; resume targeted reading only when blocked or uncertain.
@@ -75,6 +77,20 @@ Rules:
 - Update `.agent/memory/index.md` in the same change.
 - Do not log obvious facts that can be derived from files.
 - Keep entries concise and decision-oriented so future agents can avoid rediscovering project context.
+
+### 2.1.1 Archive
+
+Archive stores older memory that should remain searchable without being loaded during normal startup.
+
+Rules:
+
+- Use `.agent/archive/index.md` as the only required archive entry point.
+- Store archived memory in period files such as `.agent/archive/yyyy/qN.md`.
+- Move memory to archive when it is old enough that most sessions should not load it, but still valuable enough to keep searchable.
+- Update both `.agent/memory/index.md` and `.agent/archive/index.md` when moving entries.
+- Archive index rows must identify the archive file, section, keywords, original date, and one-line summary.
+- Agents must not read archive files during startup unless the archive index indicates direct relevance to the current task.
+- Prefer `rg` against `.agent/archive/` for deep lookup when neither memory index nor archive index is enough.
 
 ### 2.2 Skills
 
@@ -139,7 +155,7 @@ If they are placeholders in a newly adopted repo, fill them before relying on th
 
 ## 3. Frontmatter Convention
 
-Generated files under `.agent/memory/`, `.agent/implementation/`, `.agent/skills/`, and `.agent/decisions/` start with YAML frontmatter.
+Generated files under `.agent/memory/`, `.agent/archive/`, `.agent/implementation/`, `.agent/skills/`, and `.agent/decisions/` start with YAML frontmatter.
 
 Example:
 
@@ -184,8 +200,9 @@ Both scripts perform identical checks. In `review` or `read-only` mode, run the 
 1. Identify work mode.
 2. Follow the read order using token discipline.
 3. **Resumption & Handoff Check:** Check the last completed items in `.agent/task.md` and the most recent entry in `.agent/memory/index.md`. If resuming a task, read the relevant dated memory log to understand previous decisions and prevent session amnesia.
-4. Check relevant memory, implementation plans, ADRs, and skills only after their indexes indicate they are useful.
-5. Use targeted code search to find the smallest relevant code surface before opening files.
+4. Check archive only when current memory does not contain the needed older context.
+5. Check relevant memory, implementation plans, ADRs, and skills only after their indexes indicate they are useful.
+6. Use targeted code search to find the smallest relevant code surface before opening files.
 
 ### During Work
 
@@ -218,5 +235,6 @@ Do not create memory entries for routine edits, obvious implementation details, 
 
 - Code beats docs.
 - Newer memory supersedes older memory.
+- Current memory supersedes archived memory unless the archive records a still-active decision.
 - Read-only work reports drift instead of fixing it.
 - If the workflow changes, update `BRAIN.md` first.

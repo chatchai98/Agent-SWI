@@ -27,8 +27,8 @@ echo "[1] Required root files"
 echo "[2] Required .agent files"
 for f in \
   .agent/version.md .agent/task.md .agent/stack.md \
-  .agent/conventions.md .agent/glossary.md .agent/memory/index.md .agent/skills/index.md \
-  .agent/templates/memory_template.md .agent/templates/implementation_template.md \
+  .agent/conventions.md .agent/glossary.md .agent/memory/index.md .agent/archive/index.md .agent/skills/index.md \
+  .agent/templates/memory_template.md .agent/templates/archive_template.md .agent/templates/implementation_template.md \
   .agent/templates/skill_template.md .agent/templates/adr_template.md
 do
   [ -f "$f" ] && pass "$f" || fail "$f missing"
@@ -59,9 +59,17 @@ for f in .agent/memory/*.md; do
   if grep -q "$base" .agent/memory/index.md; then pass "indexed: $base"; else fail "not in memory/index.md: $base"; fi
 done
 
-echo "[6] Frontmatter present (memory, implementation, skills, decisions)"
-for dir in memory implementation skills decisions; do
-  for f in .agent/$dir/*.md; do
+echo "[5a] Archive index coverage"
+if [ -d .agent/archive ]; then
+  for f in $(find .agent/archive -type f -name '*.md' ! -name 'index.md'); do
+    rel=${f#".agent/archive/"}
+    if grep -q "$rel" .agent/archive/index.md; then pass "indexed: $rel"; else fail "not in archive/index.md: $rel"; fi
+  done
+fi
+
+echo "[6] Frontmatter present (memory, archive, implementation, skills, decisions)"
+for dir in memory archive implementation skills decisions; do
+  for f in $(find ".agent/$dir" -type f -name '*.md' 2>/dev/null); do
     [ -e "$f" ] || continue
     base=$(basename "$f")
     [ "$base" = "index.md" ] && continue
@@ -77,6 +85,13 @@ for f in .agent/memory/*.md; do
   echo "$base" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$' \
     && pass "memory name: $base" || fail "bad memory name (want yyyy-mm-dd.md): $base"
 done
+if [ -d .agent/archive ]; then
+  for f in $(find .agent/archive -type f -name '*.md' ! -name 'index.md'); do
+    rel=${f#".agent/archive/"}
+    echo "$rel" | grep -Eq '^[0-9]{4}/q[1-4]\.md$' \
+      && pass "archive name: $rel" || fail "bad archive name (want .agent/archive/yyyy/qN.md): $rel"
+  done
+fi
 for f in .agent/decisions/*.md; do
   [ -e "$f" ] || continue
   base=$(basename "$f"); [ "$base" = "index.md" ] && continue
