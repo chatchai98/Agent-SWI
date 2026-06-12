@@ -1,5 +1,5 @@
 ---
-agent_swi_version: 0.3.0
+agent_swi_version: 0.4.0
 type: contract
 status: active
 ---

@@ -2,7 +2,7 @@
 
 > A drop-in "Second Brain" convention for AI coding agents. One folder, one contract, and every agent that touches your project can recover the same stack, conventions, decisions, memory, and implementation history.
 
-Current standard version: `0.3.0`
+Current standard version: `0.4.0`
 
 ---
 
@@ -104,11 +104,12 @@ Saying "read `BRAIN.md`" only affects the **current** session. To make every AI 
 | AI Tool | File it auto-loads |
 | ------- | ------------------ |
 | Claude Code | `CLAUDE.md` |
-| Codex CLI / OpenCode | `AGENTS.md` |
+| Codex CLI / OpenCode / Antigravity CLI / DeepSeek TUI | `AGENTS.md` |
 | Gemini CLI | `GEMINI.md` |
 | Cursor | `.cursor/rules/agent.mdc` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
 | Windsurf | `.windsurfrules` |
+| Aider | `CONVENTIONS.md` (plus `--read CONVENTIONS.md` in `.aider.conf.yml`) |
 
 Each pointer just says "read `BRAIN.md` first." On the first session, your AI will offer to create them — say yes and pick the tools you use. The skill `.agent/skills/bootstrap-cli-pointers.md` does this safely (it injects into existing files without overwriting your content).
 
@@ -168,7 +169,7 @@ Agent-SWI uses semantic versioning for the standard itself:
 - Minor: new optional files, examples, checklists, or compatible workflow improvements.
 - Major: breaking changes to file layout, required fields, or agent workflow.
 
-`.agent/version.md` records which standard version a project is on. See the GitHub releases for changes between versions.
+`.agent/version.md` records which standard version a project is on. See `CHANGELOG.md` for changes between versions.
 
 ---
 

@@ -47,8 +47,8 @@ Row format:
 | Skill | Tags | When to use | Last Verified |
 | ----- | ---- | ----------- | ------------- |
 | [Bootstrap CLI Pointer Files](bootstrap-cli-pointers.md) | `setup`, `onboarding`, `cli`, `pointer-files` | User wants every AI CLI (Claude Code, Codex, Gemini, Cursor, Windsurf, Copilot, Aider, …) to auto-read `BRAIN.md` at session start — create or safely inject pointer files. | 2026-05-22 |
-| [Structure Validate](structure-validate.md) | `structure-check`, `validation`, `index-drift`, `maintenance` | Check Agent-SWI structural consistency or suspected index drift; run the validator and act on each violation by work mode. | 2026-05-24 |
+| [Structure Validate](structure-validate.md) | `structure-check`, `validation`, `index-drift`, `maintenance` | Check Agent-SWI structural consistency or suspected index drift; run the validator and act on each violation by work mode. | 2026-06-12 |
 
 ---
 
-_Last updated: 2026-05-24_
+_Last updated: 2026-06-12_

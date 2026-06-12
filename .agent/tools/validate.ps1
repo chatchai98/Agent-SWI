@@ -24,6 +24,7 @@ Write-Host "[2] Required .agent files"
 $required = @(
   '.agent\version.md', '.agent\task.md', '.agent\stack.md',
   '.agent\conventions.md', '.agent\glossary.md', '.agent\memory\index.md', '.agent\archive\index.md', '.agent\skills\index.md',
+  '.agent\checklists\structure_checklist.md',
   '.agent\templates\memory_template.md', '.agent\templates\archive_template.md', '.agent\templates\implementation_template.md',
   '.agent\templates\skill_template.md', '.agent\templates\adr_template.md'
 )

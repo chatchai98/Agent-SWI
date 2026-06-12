@@ -2,7 +2,7 @@
 name: structure-validate
 type: skill
 tags: [structure-check, validation, index-drift, maintenance]
-last_verified: 2026-05-24
+last_verified: 2026-06-12
 related_files:
   - .agent/checklists/structure_checklist.md
   - .agent/tools/validate.sh
@@ -74,8 +74,15 @@ related_files:
 
 ## Examples
 
-_(none yet — first invocation will be recorded in `.agent/implementation/` and linked here)_
+**2026-06-12 — review-mode run on this repo (v0.4.0).** Both validators were run from the repo root:
+
+```sh
+sh .agent/tools/validate.sh
+powershell -ExecutionPolicy Bypass -File .agent\tools\validate.ps1
+```
+
+Both printed `RESULT: PASS` and exited 0, and their OK/FAIL lines agreed. Because the session was in review mode, no files were touched; the result was reported instead. If one of them had printed, e.g., `FAIL  not in skills/index.md: new-skill.md`, the violation playbook row for `not in skills/index.md` would apply: report the orphaned skill (review mode) or add the index row in the same change (implementation mode).
 
 ---
 
-_Last verified: 2026-05-24. If the validator's checks or the checklist change, update this skill to match before using it._
+_Last verified: 2026-06-12. If the validator's checks or the checklist change, update this skill to match before using it._
